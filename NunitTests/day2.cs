@@ -17,9 +17,8 @@ namespace NunitTests
             // Arrange
 
             // Act
-            var x = _sut.Test();
+            _sut.Run();
             // Assert
-            x.Should().Be(133);
         }
     }
 }

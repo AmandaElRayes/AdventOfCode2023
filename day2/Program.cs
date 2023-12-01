@@ -2,4 +2,4 @@
 
 var program = new Day2();
 
-program.Test();
+program.Run();
