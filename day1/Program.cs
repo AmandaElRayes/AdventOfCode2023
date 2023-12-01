@@ -2,7 +2,7 @@
 
 namespace day1
 {
-    public class Program
+    public partial class Program
     {
         static void Main()
         {
@@ -11,13 +11,10 @@ namespace day1
             var finalDigit = 0;
             while (!sr.EndOfStream)
             {
-                var input = sr.ReadLine();
-                Console.WriteLine(input);
-                // get numbers
+                var input = sr.ReadLine() ?? throw new Exception();
                 string digits = input;
                 digits = Part2(input);
-                Console.WriteLine(digits);
-                digits = Regex.Replace(digits, "[a-z]", "");
+                digits = LowerCaseLetters().Replace(digits, "");
                 switch (digits.Length)
                 {
                     case 0:
@@ -30,11 +27,9 @@ namespace day1
                         finalDigit = int.Parse(digits);
                         break;
                     default:
-                        finalDigit = int.Parse(digits[0].ToString() + digits[digits.Length - 1].ToString());
+                        finalDigit = int.Parse(digits[0].ToString() + digits[^1].ToString());
                         break;
                 }
-                Console.WriteLine(finalDigit);
-                Console.WriteLine('\n');
                 count += finalDigit;
             }
             Console.WriteLine(count);
@@ -43,44 +38,39 @@ namespace day1
         private static string Part2(string digits)
         {
 
-            var matchCollection = Regex.Matches(digits, "(?=(one|two|three|four|five|six|seven|eight|nine))");
+            var matchCollection = NumbersAsString().Matches(digits);
 
-            //foreach(Match m in matchCollection)
-            //{
-            //    var u = m.Groups[1].Value;
-            //}
-            //var x = "M";
-            foreach (Match match in matchCollection)
+            foreach (Match match in matchCollection.Cast<Match>())
             {
 
                 switch (match.Groups[1].Value)
                 {
                     case "one":
-                        digits = Regex.Replace(digits, "one", "1ne");
+                        digits = One().Replace(digits, "1ne");
                         break;
                     case "two":
-                        digits = Regex.Replace(digits, "two", "2wo");
+                        digits = Two().Replace(digits, "2wo");
                         break;
                     case "three":
-                        digits = Regex.Replace(digits, "three", "3hree");
+                        digits = Three().Replace(digits, "3hree");
                         break;
                     case "four":
-                        digits = Regex.Replace(digits, "four", "4our");
+                        digits = Four().Replace(digits, "4our");
                         break;
                     case "five":
-                        digits = Regex.Replace(digits, "five", "5ive");
+                        digits = Five().Replace(digits, "5ive");
                         break;
                     case "six":
-                        digits = Regex.Replace(digits, "six", "6ix");
+                        digits = Six().Replace(digits, "6ix");
                         break;
                     case "seven":
-                        digits = Regex.Replace(digits, "seven", "7even");
+                        digits = Seven().Replace(digits, "7even");
                         break;
                     case "eight":
-                        digits = Regex.Replace(digits, "eight", "8ight");
+                        digits = Eight().Replace(digits, "8ight");
                         break;
                     case "nine":
-                        digits = Regex.Replace(digits, "nine", "9ine");
+                        digits = Nine().Replace(digits, "9ine");
                         break;
                     default:
                         break;
@@ -89,5 +79,28 @@ namespace day1
 
             return digits;
         }
+
+        [GeneratedRegex("four")]
+        private static partial Regex Four();
+        [GeneratedRegex("nine")]
+        private static partial Regex Nine();
+        [GeneratedRegex("eight")]
+        private static partial Regex Eight();
+        [GeneratedRegex("one")]
+        private static partial Regex One();
+        [GeneratedRegex("two")]
+        private static partial Regex Two();
+        [GeneratedRegex("three")]
+        private static partial Regex Three();
+        [GeneratedRegex("five")]
+        private static partial Regex Five();
+        [GeneratedRegex("six")]
+        private static partial Regex Six();
+        [GeneratedRegex("seven")]
+        private static partial Regex Seven();
+        [GeneratedRegex("(?=(one|two|three|four|five|six|seven|eight|nine))")]
+        private static partial Regex NumbersAsString();
+        [GeneratedRegex("[a-z]")]
+        private static partial Regex LowerCaseLetters();
     }
 }
