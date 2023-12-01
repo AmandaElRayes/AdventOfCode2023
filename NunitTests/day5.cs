@@ -1,14 +1,14 @@
-using day2;
+﻿using day5;
 
 namespace NunitTests
 {
-    public class Tests
+    public class Day5
     {
-        private Day2 _sut;
+        private day5.Day5 _sut;
         [SetUp]
         public void Setup()
         {
-            _sut = new Day2();
+            _sut = new day5.Day5();
         }
 
         [Test]
@@ -17,9 +17,10 @@ namespace NunitTests
             // Arrange
 
             // Act
-            var x = _sut.Test();
+            _sut.Run();
+
             // Assert
-            x.Should().Be(133);
+
         }
     }
 }

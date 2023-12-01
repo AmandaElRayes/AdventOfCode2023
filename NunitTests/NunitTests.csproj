@@ -19,7 +19,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\day10\dayz10.csproj" />
     <ProjectReference Include="..\day2\day2.csproj" />
+    <ProjectReference Include="..\day3\day3.csproj" />
+    <ProjectReference Include="..\day4\day4.csproj" />
+    <ProjectReference Include="..\day5\day5.csproj" />
+    <ProjectReference Include="..\day6\day6.csproj" />
+    <ProjectReference Include="..\day7\day7.csproj" />
+    <ProjectReference Include="..\day8\day8.csproj" />
+    <ProjectReference Include="..\day9\day9.csproj" />
+    <ProjectReference Include="..\dayz11\dayz11.csproj" />
+    <ProjectReference Include="..\dayz12\dayz12.csproj" />
+    <ProjectReference Include="..\dayz13\dayz13.csproj" />
+    <ProjectReference Include="..\dayz14\dayz14.csproj" />
+    <ProjectReference Include="..\dayz15\dayz15.csproj" />
+    <ProjectReference Include="..\dayz16\dayz16.csproj" />
+    <ProjectReference Include="..\dayz17\dayz17.csproj" />
+    <ProjectReference Include="..\dayz18\dayz18.csproj" />
+    <ProjectReference Include="..\dayz19\dayz19.csproj" />
+    <ProjectReference Include="..\dayzz20\dayzz20.csproj" />
+    <ProjectReference Include="..\dayzz21\dayzz21.csproj" />
+    <ProjectReference Include="..\dayzz22\dayzz22.csproj" />
+    <ProjectReference Include="..\dayzz23\dayzz23.csproj" />
+    <ProjectReference Include="..\dayzz24\dayzz24.csproj" />
+    <ProjectReference Include="..\dayzz25\dayzz25.csproj" />
   </ItemGroup>
 
 </Project>
