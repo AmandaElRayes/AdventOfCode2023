@@ -76,7 +76,6 @@ namespace day1
                         break;
                 }
             }
-
             return digits;
         }
 

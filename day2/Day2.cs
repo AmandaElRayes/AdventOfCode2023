@@ -25,7 +25,6 @@ namespace day2
                     counter += int.Parse(game.Key);
                 }
             }
-
             return counter;
         }
 
