@@ -8,22 +8,43 @@ namespace day2
         {
             var dict = ReadFile();
             int counter = Part1(dict);
-            var sumOfPowers = 0;
-            foreach(var game in dict)
-            {
-                sumOfPowers += GetPowerOfCubes(game.Value);
-            }
-
+            int sumOfPowers = Part2(dict);
 
             Console.WriteLine("Part 1: " + counter);
             Console.WriteLine("Part 2: " + sumOfPowers);
         }
 
+        private static int Part1(Dictionary<string, List<string>> dict)
+        {
+            var counter = 0;
+            foreach (var game in dict)
+            {
+                bool possible = CheckIfPossible(game.Value);
+                if (possible)
+                {
+                    counter += int.Parse(game.Key);
+                }
+            }
+
+            return counter;
+        }
+
+        private int Part2(Dictionary<string, List<string>> dict)
+        {
+            var sumOfPowers = 0;
+            foreach (var game in dict)
+            {
+                sumOfPowers += GetPowerOfCubes(game.Value);
+            }
+
+            return sumOfPowers;
+        }
+
         private int GetPowerOfCubes(List<string> game)
         {
-            List<int> redList = new();
-            List<int> greenList = new();
-            List<int> blueList = new();
+            List<int> redList = [];
+            List<int> greenList = [];
+            List<int> blueList = [];
             Dictionary<string, List<int>> cubesByColor = [];
 
             foreach (var g in game)
@@ -50,24 +71,9 @@ namespace day2
             }
             var power = redList.Max() * blueList.Max() * greenList.Max();
             return power;
-        }
+        } 
 
-        private int Part1(Dictionary<string, List<string>> dict)
-        {
-            var counter = 0;
-            foreach (var game in dict)
-            {
-                bool possible = CheckIfPossible(game.Value);
-                if (possible)
-                {
-                    counter += int.Parse(game.Key);
-                }
-            }
-
-            return counter;
-        }
-
-        private bool CheckIfPossible(List<string> game)
+        private static bool CheckIfPossible(List<string> game)
         {
             var redCubes = 12;
             var greenCubes = 13;
@@ -100,8 +106,6 @@ namespace day2
                                 possible = false;
                             }
                             break;
-
-
                         default:
                             break;
                     }
@@ -117,12 +121,11 @@ namespace day2
             while (!sr.EndOfStream)
             {
                 var line = sr.ReadLine();
-                var splitForGameNo = line.Split(':');
+                var splitForGameNo = line?.Split(':') ?? throw new NullReferenceException();
                 var gameNo = splitForGameNo[0].Split(" ")[1].Replace(":", "");
                 var gameSets = splitForGameNo[1].Split(";").ToList();
 
                 dictionary.Add(gameNo, gameSets);
-
             }
             return dictionary;
         }
