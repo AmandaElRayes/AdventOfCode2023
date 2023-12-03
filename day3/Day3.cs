@@ -30,7 +30,7 @@ namespace day3
                 count++;
             }
 
-            //Part1(input, matches);
+            Part1(input, matches);
 
 
             //part 2
