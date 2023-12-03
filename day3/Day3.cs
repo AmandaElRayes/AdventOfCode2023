@@ -30,6 +30,49 @@ namespace day3
                 count++;
             }
 
+            //Part1(input, matches);
+
+
+            //part 2
+            var gearRatios = new List<int>();
+
+            var gearSymbolMatches = new List<NoInfo>();
+            var Gearcounter = 0;
+            foreach (var line in input)
+            {
+                var characterMatches = Regex.Matches(line, "(\\*+)");
+                foreach (Match match in characterMatches)
+                {
+                    // check adj digits here.
+                    var adjacentDigits = matches.Where(x => x.Line == Gearcounter | x.Line == Gearcounter + 1 | x.Line == Gearcounter - 1);
+
+                    var savedDigits = new List<int>();
+                    foreach (var digit in adjacentDigits)
+                    {
+                        var firstIndex = digit.Index - 1;
+                        var lastIndex = digit.Index + digit.Length;
+                        if (match.Index >= firstIndex && match.Index <= lastIndex)
+                        {
+                            //save digit.
+                            savedDigits.Add(digit.Number);
+                        }
+                    }
+                    if (savedDigits.Count == 2)
+                    {
+                        gearRatios.Add(savedDigits.First() * savedDigits.Last());
+                        savedDigits = new List<int>();
+
+                    }
+                }
+                Gearcounter++;
+            }
+
+            Console.WriteLine(gearRatios.Sum());
+
+        }
+
+        private static void Part1(string[] input, List<NoInfo> matches)
+        {
             // match symbols
             var symbolMatches = new List<NoInfo>();
             var counter = 0;
@@ -55,79 +98,22 @@ namespace day3
             //1.
             for (int i = 0; i < input.Length; i++)
             {
-                var adjSymbols = symbolMatches.Where(x => x.Line == i | x.Line == i+1 | x.Line == i-1);
+                var adjSymbols = symbolMatches.Where(x => x.Line == i | x.Line == i + 1 | x.Line == i - 1);
 
                 var digitsOnLine = matches.Where(x => x.Line == i);
-                
-                foreach(var digit in digitsOnLine)
+
+                foreach (var digit in digitsOnLine)
                 {
-                    var index = digit.Index -1;
+                    var index = digit.Index - 1;
                     var endIndex = digit.Index + digit.Length;
 
-                    if(adjSymbols.Any(x => x.Index >= index && x.Index <= endIndex))
+                    if (adjSymbols.Any(x => x.Index >= index && x.Index <= endIndex))
                     {
                         numbersToKeep.Add(digit.Number);
                     }
                 }
             }
             Console.WriteLine(numbersToKeep.Sum());
-
-
-            //part 2
-            var gearRatios = new List<int>();
-
-            var gearSymbolMatches = new List<NoInfo>();
-            var Gearcounter = 0;
-            foreach (var line in input)
-            {
-                var characterMatches = Regex.Matches(line, "(\\*+)");
-                foreach (Match match in characterMatches)
-                {
-                    // check adj digits here.
-                    var adjacentDigits = matches.Where(x => x.Line == Gearcounter | x.Line == Gearcounter + 1 | x.Line == Gearcounter - 1);
-
-                    foreach (var digit in adjacentDigits)
-                    {
-                        if(digit.Index >= match.Index && digit.Length <= match.Index)
-                        {
-                            //save digit.
-                        }
-                    }
-
-                    // if saved digits == 2 multiply values, save in gearRatios
-
-                    //var charInfo = new NoInfo()
-                    //{
-                    //    Number = -1,
-                    //    Index = match.Index,
-                    //    Length = match.Length,
-                    //    Line = Gearcounter
-                    //};
-                    //gearSymbolMatches.Add(charInfo);
-                }
-                Gearcounter++;
-            }
-
-            //for (int i = 0; i < input.Length; i++)
-            //{
-            //    var symbolsOnLine = gearSymbolMatches.Where(x => x.Line == i);
-            //    var adjacentDigits = matches.Where(x => x.Line == i | x.Line == i + 1 | x.Line == i - 1);
-
-            //    foreach (var symbol in symbolsOnLine)
-            //    {
-            //        var index = 0;
-            //        var endIndex = 0;
-
-            //        if(adjacentDigits.Any(x => x.Index >= index && x.Index <= endIndex))
-            //        {
-
-            //        }
-            //    }
-
-            //}
-
-            Console.WriteLine(gearRatios.Sum());
-
         }
     }
 
