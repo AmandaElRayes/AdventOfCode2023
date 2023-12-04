@@ -2,13 +2,13 @@
 
 namespace NunitTests
 {
-    public class Day4
+    public class Day4Tests
     {
-        private day4.Day4 _sut;
+        private Day4 _sut;
         [SetUp]
         public void Setup()
         {
-            _sut = new day4.Day4();
+            _sut = new Day4();
         }
 
         [Test]
