@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace day5
 {
@@ -20,7 +21,7 @@ namespace day5
             foreach (var range in seedsToBePlanted)
             {
                 //if index is odd grab 2
-                if(count % 2 == 0)
+                if (count % 2 == 0)
                 {
                     var seedRange = new Ranges()
                     {
@@ -34,77 +35,70 @@ namespace day5
                 {
                     savedValue = uint.Parse(range);
                 }
-                count ++;
+                count++;
             }
 
-            //concatenate ranges
-            var listofSeeds = new List<uint>();
-            var locationPerSeed = new List<uint>();
-            foreach (var r in seedRanges)
+            var locationMap = dictionary.TryGetValue("humidity-to-location map:", out List<Ranges> locations);
+            var minLocations = locations.Select(x => x.SourceRangeStart);
+            var seedPerLocation = new List<uint>();
+            foreach (uint location in minLocations)
             {
-                for (uint i = r.SourceRangeStart; i < r.DestRangeStart; i++)
+                uint loc = location;
+                foreach (var map in dictionary.Reverse())
                 {
-                    uint location = i;
-                    foreach (var map in dictionary)
-                    {
-                        location = GetCorrespondingNumber(map, location);
-                    }
-                    locationPerSeed.Add(location);
-                }                
+                    loc = GetCorrespondingNumberInReverse(map, loc);
+                }
+                // check if seed in range
+                if(seedsToBePlanted.Contains(loc.ToString()))
+                {
+                    Console.WriteLine("true," + loc);
+                }
+
             }
-
-            //var locationPerSeed = new List<uint>();
-            //foreach (var seed in listofSeeds)
+            //foreach (var map in dictionary.Reverse())
             //{
-            //    uint location = seed;
-            //    foreach (var map in dictionary)
+            //    foreach (var range in map.Value)
             //    {
-            //        location = GetCorrespondingNumber(map, location);
-            //    }
-            //    locationPerSeed.Add(location);
-            //}
-
-            //var (start, end) = IntersectSeedRanges(seedRanges);
-            //var locationPerSeed = new List<uint>();
-            //for (uint i = start; i < end; i++)
-            //{
-            //    uint location = i;
-            //    foreach (var map in dictionary)
-            //    {
-            //        location = GetCorrespondingNumber(map, location);
-            //    }
-            //    locationPerSeed.Add(location);
-            //}
-
-            //foreach (var r in seedRanges)
-            //{
-            //    for (uint i = start; i < end; i++)
-            //    {
-            //        uint location = i;
-            //        foreach (var map in dictionary)
+            //        for (uint i = range.SourceRangeStart; i < range.RangeLength; i++)
             //        {
-            //            location = GetCorrespondingNumber(map, location);
+            //            var seedNo = i;
+            //            seedNo = GetCorrespondingNumber(map, seedNo);
             //        }
-            //        locationPerSeed.Add(location);
+            //        var locationPerSeed = new List<uint>();
             //    }
             //}
-            Console.WriteLine(locationPerSeed.Min());
 
-
-            Console.WriteLine("part2 lowest location: ");
+            Console.WriteLine("");
         }
 
-        private (uint, uint) IntersectSeedRanges(List<Ranges> seedRanges)
-        {
-            var source = seedRanges.Select(x => x.SourceRangeStart).Min();
-            var dest = seedRanges.Select(x => x.DestRangeStart).Max();
+        //private (uint, uint) IntersectSeedRanges(List<Ranges> seedRanges)
+        //{
+        //    var source = seedRanges.Select(x => x.SourceRangeStart);
+        //    var dest = seedRanges.Select(x => x.DestRangeStart);
+        //    //for (uint i = source; i < dest; i++)
+        //    //{
 
-            for (uint i = source; i < dest; i++)
+        //    //    //if in seedranges => keep
+        //    //    // else remove
+        //    //}
+        //    return (1, 1);
+        //}
+
+        private uint GetCorrespondingNumberInReverse(KeyValuePair<string, List<Ranges>> map, uint location)
+        {
+            var ranges = map.Value;
+            foreach (var range in ranges)
             {
-                //if in seedranges => keep
-                // else remove
+                if (location >= range.DestRangeStart && location < range.DestRangeStart + range.RangeLength)
+                {
+                    // check where in range
+                    var index = location - range.DestRangeStart;
+                    //get dest 
+                    location = range.SourceRangeStart + index;
+                    break;
+                }
             }
-            return (source, dest);
+            return location;
         }
 
         private void Part1(IEnumerable<string> seedsToBePlanted, Dictionary<string, List<Ranges>> dictionary)
@@ -116,7 +110,6 @@ namespace day5
                 foreach (var map in dictionary)
                 {
                     location = GetCorrespondingNumber(map, location);
-
                 }
                 locationPerSeed.Add(location);
             }
