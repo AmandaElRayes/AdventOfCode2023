@@ -23,7 +23,7 @@ namespace day7
             input = new Regex("A").Replace(input, "E");
             input = new Regex("K").Replace(input, "D");
             input = new Regex("Q").Replace(input, "C");
-            input = new Regex("J").Replace(input, "B");
+            input = new Regex("J").Replace(input, "!");
             input = new Regex("T").Replace(input, "A");
             return input;
         }
@@ -77,6 +77,7 @@ namespace day7
         public void CreateTypeDict(string hand, Dictionary<Type, List<string>> typeDict)
         {
             var addedHand = false;
+            var jOccurances = CountCharOccurances(hand, '!');
             switch (hand.Distinct().Count())
             {                
                 case 1:
@@ -85,44 +86,86 @@ namespace day7
                 case 2:
                     foreach (var val in hand.Distinct())
                     {
-                        var noOfOccurances = CountCharOccurances(hand, val);
-
-                        if (noOfOccurances == 1)
+                        var noOfChars = CountCharOccurances(hand, val);
+                        if(val == '!')
+                        {
+                            typeDict.GetValueOrDefault(Type.FiveOfAKind)?.Add(hand);
+                            addedHand = true;
+                            break;
+                        }
+                        if (noOfChars == 1 && !addedHand)
                         {
                             typeDict.GetValueOrDefault(Type.FourOfAKind)?.Add(hand);
                             addedHand = true;
                             break;
                         }
-
                     }
                     if (!addedHand)
-                    { 
-                            typeDict.GetValueOrDefault(Type.FullHouse)?.Add(hand);                    
+                    {
+                            typeDict.GetValueOrDefault(Type.FullHouse)?.Add(hand);
                         
                     }                    
                     break;
                 case 3:
                     foreach (var val in hand.Distinct())
                     {
-                        var noOfOccurances = CountCharOccurances(hand, val);
+                        var noOfChars = CountCharOccurances(hand, val);
 
-                        if (noOfOccurances == 3)
+                        if (!addedHand && noOfChars == 3)
                         {
-                            typeDict.GetValueOrDefault(Type.ThreeOfAKind)?.Add(hand);
-                            addedHand = true;
+                            switch (jOccurances)
+                            {
+                                case 1: case 3:
+                                    typeDict.GetValueOrDefault(Type.FourOfAKind)?.Add(hand);
+                                    addedHand = true;
+                                    break;
+                                default:
+                                    typeDict.GetValueOrDefault(Type.ThreeOfAKind)?.Add(hand);
+                                    addedHand = true;
+                                    break;
+                            }
                             break;
                         }
                     }
                     if (!addedHand)
                     {
-                            typeDict.GetValueOrDefault(Type.TwoPair)?.Add(hand);                     
-                    }                    
+                        switch (jOccurances)
+                        {
+                            case 2:
+                                typeDict.GetValueOrDefault(Type.FourOfAKind)?.Add(hand);
+                                break;
+                            case 1:
+                                typeDict.GetValueOrDefault(Type.FullHouse)?.Add(hand);
+                                break;
+                            default:
+                                typeDict.GetValueOrDefault(Type.TwoPair)?.Add(hand);
+                                break;
+                        }
+                        
+                    }                                            
                     break;
                 case 4:
-                    typeDict.GetValueOrDefault(Type.OnePair)?.Add(hand);
+                    switch (jOccurances)
+                    {
+                        case 2: case 1:
+                            typeDict.GetValueOrDefault(Type.ThreeOfAKind)?.Add(hand);
+                            break;
+                        default:
+                            typeDict.GetValueOrDefault(Type.OnePair)?.Add(hand);
+                            break;
+
+                    }
                     break;
                 case 5:
-                    typeDict.GetValueOrDefault(Type.HighCard)?.Add(hand);
+                    switch (jOccurances)
+                    {
+                        case 1:
+                            typeDict.GetValueOrDefault(Type.OnePair)?.Add(hand);
+                            break;
+                        default:
+                            typeDict.GetValueOrDefault(Type.HighCard)?.Add(hand);
+                            break;
+                    }
                     break;
                 default:
                     break;
