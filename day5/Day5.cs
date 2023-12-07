@@ -16,9 +16,9 @@ namespace day5
             sr.ReadLine(); // reading empty line
             var dictionary = MapData(sr);
 
-            //Part1(seedsToBePlanted, dictionary);
+            Part1(seedsToBePlanted, dictionary);
 
-            ReverseCheck(dictionary, seedsToBePlanted);
+            //ReverseCheck(dictionary, seedsToBePlanted);
 
             //IfAllElseFails(seedsToBePlanted, dictionary);
 
