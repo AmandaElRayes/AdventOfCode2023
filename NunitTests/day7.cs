@@ -12,14 +12,25 @@ namespace NunitTests
         }
 
         [Test]
-        public void Test1()
+        public void RankTests()
         {
             // Arrange
+            var rank = new day7.RankComparer();
+            var listOfHands = new List<string>()
+            {
+                "KJ123",
+                "QA333",
+                "KK332",
+                //"KK677",
+                //"KTJJT"
 
+
+            };
             // Act
-            _sut.Run();
+            var x = _sut.Rank(rank, listOfHands);
 
             // Assert
+            x.Should().NotBeNull();
 
         }
     }
