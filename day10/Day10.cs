@@ -43,61 +43,61 @@ namespace dayz10
         private static void DisplayGrid(char[,] grid)
         {
             // left to right
-            for (int i = 0; i < grid.GetLength(0) - 1; i++)
-            {
-                for (int j = 0; j < grid.GetLength(1) - 1; j++)
-                {
-                    if (grid[i, j] == '0')
-                    {
-                        break;
-                    }
-                    grid[i, j] = '*';
-                }
-            }
+            //for (int i = 0; i < grid.GetLength(0) - 1; i++)
+            //{
+            //    for (int j = 0; j < grid.GetLength(1) - 1; j++)
+            //    {
+            //        if (grid[i, j] == '0')
+            //        {
+            //            break;
+            //        }
+            //        grid[i, j] = '*';
+            //    }
+            //}
 
 
-            //reverse
-            for (int i = grid.GetLength(0) - 1; i > 0; i--)
-            {
-                for (int j = grid.GetLength(1) - 1; j > 0; j--)
-                {
-                    if (grid[i, j] == '0')
-                    {
-                        break;
-                    }
-                    grid[i, j] = '*';
-                }
-            }
+            ////reverse
+            //for (int i = grid.GetLength(0) - 1; i > 0; i--)
+            //{
+            //    for (int j = grid.GetLength(1) - 1; j > 0; j--)
+            //    {
+            //        if (grid[i, j] == '0')
+            //        {
+            //            break;
+            //        }
+            //        grid[i, j] = '*';
+            //    }
+            //}
 
-            // up down
-            for (int j = 0; j < grid.GetLength(1) - 1; j++)
-            {
-                for (int i = 0; i < grid.GetLength(0) - 1; i++)
-                {
-                    if (grid[i, j] == '0')
-                    {
-                        break;
-                    }
-                    grid[i, j] = '*';
-                }
-            }
-            // down up
-            for (int j = grid.GetLength(1) - 1; j > 0; j--)
-            {
-                for (int i = grid.GetLength(0) - 1; i > 0; i--)
-                {
-                    if (grid[i, j] == '0')
-                    {
-                        break;
-                    }
-                    grid[i, j] = '*';
-                }
-            }
+            //// up down
+            //for (int j = 0; j < grid.GetLength(1) - 1; j++)
+            //{
+            //    for (int i = 0; i < grid.GetLength(0) - 1; i++)
+            //    {
+            //        if (grid[i, j] == '0')
+            //        {
+            //            break;
+            //        }
+            //        grid[i, j] = '*';
+            //    }
+            //}
+            //// down up
+            //for (int j = grid.GetLength(1) - 1; j > 0; j--)
+            //{
+            //    for (int i = grid.GetLength(0) - 1; i > 0; i--)
+            //    {
+            //        if (grid[i, j] == '0')
+            //        {
+            //            break;
+            //        }
+            //        grid[i, j] = '*';
+            //    }
+            //}
 
-            while (SetStars(grid, false))
-            {
-                SetStars(grid, false);
-            }
+            //while (SetStars(grid, false))
+            //{
+            //    SetStars(grid, false);
+            //}
 
 
             var enclosedCount = 0;
