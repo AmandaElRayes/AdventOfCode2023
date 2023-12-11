@@ -38,6 +38,7 @@
 
         private char[,] AddSpace(char[,] grid, Queue<Galaxy> galaxies)
         {
+            var plusMillion = 1000000;
             //for rows
             var emptyRows = new Queue<int>();
             var emptyColumns = new Queue<int>();
@@ -53,7 +54,7 @@
                 }
             }
             char[,] expandedGrid = 
-                new char[emptyRows.Count + grid.GetLength(0), emptyColumns.Count + grid.GetLength(1)];
+                new char[(emptyRows.Count*plusMillion) + grid.GetLength(0), (emptyColumns.Count*plusMillion) + grid.GetLength(1)];
 
             Console.WriteLine("Expanded grid");
 
@@ -81,11 +82,13 @@
 
             foreach(var ID in increaseRowPositionOf)
             {
-                galaxies.Where(x => x.Id == ID).First().rowPosition++;
+                var gal = galaxies.Where(x => x.Id == ID).First();
+                gal.rowPosition += plusMillion;
             }
             foreach (var ID in increaseColPositionOf)
             {
-                galaxies.Where(x => x.Id == ID).First().columnPosition++;
+                var gal = galaxies.Where(x => x.Id == ID).First();
+                gal.columnPosition += plusMillion;
             }
 
             for (int i = 0; i < expandedGrid.GetLength(0); i++)
