@@ -16,29 +16,23 @@
             // add spaces
             char[,] expandedGrid = AddSpace(grid, galaxies);
 
-            var sum = 0;
-            var count = 0;
+            long sum = 0;
             while(galaxies.Count != 0)
             {
                 var currentGalaxy = galaxies.Dequeue();
                 foreach(var gal in galaxies)
                 {
-                    var rowDistance = Math.Abs(currentGalaxy.rowPosition  - gal.rowPosition);
-                    var colDistance = Math.Abs(currentGalaxy.columnPosition - gal.columnPosition);
-                    var partsum = rowDistance + colDistance;
-                    sum += partsum;
-                    count++;
+                    sum += Math.Abs(currentGalaxy.rowPosition - gal.rowPosition) + Math.Abs(currentGalaxy.columnPosition - gal.columnPosition);
                 }
             }
 
 
 
-            Console.WriteLine($"Sum of shortest distance to all galaxies: {sum}, no of galaxies calculated {count}");
+            Console.WriteLine($"Sum of shortest distance to all galaxies: {sum}");
         }
 
         private char[,] AddSpace(char[,] grid, Queue<Galaxy> galaxies)
         {
-            var plusMillion = 1000000;
             //for rows
             var emptyRows = new Queue<int>();
             var emptyColumns = new Queue<int>();
@@ -54,7 +48,7 @@
                 }
             }
             char[,] expandedGrid = 
-                new char[(emptyRows.Count*plusMillion) + grid.GetLength(0), (emptyColumns.Count*plusMillion) + grid.GetLength(1)];
+                new char[emptyRows.Count + grid.GetLength(0), emptyColumns.Count + grid.GetLength(1)];
 
             Console.WriteLine("Expanded grid");
 
@@ -82,34 +76,37 @@
 
             foreach(var ID in increaseRowPositionOf)
             {
-                var gal = galaxies.Where(x => x.Id == ID).First();
-                gal.rowPosition += plusMillion;
+                galaxies.Where(x => x.Id == ID).First().rowPosition += 999999;
             }
             foreach (var ID in increaseColPositionOf)
             {
-                var gal = galaxies.Where(x => x.Id == ID).First();
-                gal.columnPosition += plusMillion;
+                galaxies.Where(x => x.Id == ID).First().columnPosition += 999999;
             }
 
-            for (int i = 0; i < expandedGrid.GetLength(0); i++)
-            {
-                for (int j = 0; j < expandedGrid.GetLength(1); j++)
-                {
+            //var highestGalaxyColumn = galaxies.OrderByDescending(x => x.columnPosition).First();
+            //var highestGalaxyRow = galaxies.OrderByDescending(x => x.rowPosition).First();
 
-                    var galaxyInThisPosition = galaxies.Where(x => x.rowPosition == i && x.columnPosition == j);
-                    if (galaxyInThisPosition.Any())
-                    {
-                        expandedGrid[i, j] = '#';
-                    }
-                    else
-                    {
-                        expandedGrid[i, j] = '.';
-                    }
+            //for (int i = 0; i < highestGalaxyRow.rowPosition; i++)
+            //{
+            //    for (int j = 0; j < highestGalaxyColumn.columnPosition; j++)
+            //    {
 
-                    Console.Write(expandedGrid[i, j]);
-                }
-                Console.WriteLine("");
-            }
+            //        var galaxyInThisPosition = galaxies.Where(x => x.rowPosition == i && x.columnPosition == j);
+            //        if (galaxyInThisPosition.Any())
+            //        {
+            //            //expandedGrid[i, j] = '#';
+            //            Console.Write('#');
+            //        }
+            //        else
+            //        {
+            //            //expandedGrid[i, j] = '.';
+            //            Console.Write('.');
+            //        }
+
+            //        //Console.Write(expandedGrid[i, j]);
+            //    }
+            //    Console.WriteLine("");
+            //}
 
             return expandedGrid;
         }
@@ -145,8 +142,8 @@
     public class Galaxy
     {
         public int Id { get; set; }
-        public int rowPosition { get; set; }
-        public int columnPosition { get; set; }
+        public long rowPosition { get; set; }
+        public long columnPosition { get; set; }
 
     }
 
