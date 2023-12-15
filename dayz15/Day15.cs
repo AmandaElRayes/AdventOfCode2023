@@ -7,7 +7,7 @@ namespace dayz15
     {
         public void Run()
         {
-            using var sr = new StreamReader("testinput.txt");
+            using var sr = new StreamReader("input.txt");
             var input = sr.ReadToEnd().Split(',');
             Part1(input);
             Part2(input);
@@ -22,19 +22,16 @@ namespace dayz15
             foreach (var box in boxes)
             {
                 var labels = box.labelAndFocalLength;
-                var values = new List<int>();
+                var slotmultvalue = new List<int>();
+                var slots = new List<int>();
                 foreach (var label in labels)
                 {
-                    values.Add(label.Value);
+                    slotmultvalue.Add(label.Value.Value * label.Value.Slot);
                 }
-
-                var slot = 1;
-                foreach (var value in values)
+                foreach (var value in slotmultvalue)
                 {
-                    var focus = (1 + box.number) * slot * value;
-                    focusingPower += (1 + box.number) * slot * value;
-                    slot++;
-
+                    var focus = (1 + box.number) * value;
+                    focusingPower += focus;
                 }
             }
 
@@ -44,11 +41,13 @@ namespace dayz15
         private static List<Box> CreateBoxes(string[] input)
         {
             var boxes = new List<Box>();
+            int slot;
             foreach (var line in input)
             {
                 var key = Regex.Match(line, "[a-z]+");
                 var boxNumber = HashFunction(0, key.Value);
                 var getDigits = Regex.Match(line, "\\d+");
+                
 
                 if (getDigits.Success)
                 {
@@ -56,35 +55,78 @@ namespace dayz15
                     if (isBoxInBoxes.Count() > 0)
                     {
                         // add to dictionary
-                        var success = isBoxInBoxes.First().labelAndFocalLength.TryAdd(key.Value, int.Parse(getDigits.Value));
-                        if (!success)
+                        var noOfSlots = isBoxInBoxes.First().labelAndFocalLength.Count();
+                        var element = new Element
                         {
-                            // there is another of the same label there must be replace
-                            isBoxInBoxes.First().labelAndFocalLength.Remove(key.Value);
-                            isBoxInBoxes.First().labelAndFocalLength.Add(key.Value, int.Parse(getDigits.Value));
-
-                        }
+                            Slot = noOfSlots + 1,
+                            Value = int.Parse(getDigits.Value)
+                        };
+                        var success = isBoxInBoxes.First().labelAndFocalLength.TryAdd(key.Value, element);
+                        if (!success)
+                            ReplaceLabel(key, getDigits, isBoxInBoxes);
                     }
                     else
                     {
-                        var newBox = new Box();
-                        newBox.number = boxNumber;
-                        newBox.labelAndFocalLength.Add(key.Value, int.Parse(getDigits.Value));
-
-                        boxes.Add(newBox);
+                        AddLabelToNewBox(boxes, key, boxNumber, getDigits);
                     }
                 }
                 else
                 {
-                    // remove label
-                    var box = boxes.Where(x => x.number == boxNumber);
-                    if (box.Count() > 0 && box.First().labelAndFocalLength.ContainsKey(key.Value))
+                    // remove label , rearrange slots
+                    boxes = RemoveLabel(boxes, key, boxNumber);
+                }
+            }
+            return boxes;
+        }
+
+        private static void ReplaceLabel(Match key, Match getDigits, IEnumerable<Box> isBoxInBoxes)
+        {
+            // there is another of the same label there must be replaced
+            var slotNoOfLabelToRemove = isBoxInBoxes.First().labelAndFocalLength
+                .GetValueOrDefault(key.Value).Slot;
+
+
+            isBoxInBoxes.First().labelAndFocalLength.Remove(key.Value);
+
+            var element = new Element()
+            {
+                Slot = slotNoOfLabelToRemove,
+                Value = int.Parse(getDigits.Value)
+            };
+
+            isBoxInBoxes.First().labelAndFocalLength.Add(key.Value, element);
+
+        }
+
+        private static List<Box> RemoveLabel(List<Box> boxes, Match key, int boxNumber)
+        {
+            var box = boxes.Where(x => x.number == boxNumber);
+
+            if (box.Count() > 0 && box.First().labelAndFocalLength.ContainsKey(key.Value))
+            {
+                var slotNoOfLabelToRemove = box.First().labelAndFocalLength.GetValueOrDefault(key.Value).Slot;
+                box.First().labelAndFocalLength.Remove(key.Value);
+
+                foreach (var item in box.First().labelAndFocalLength)
+                {
+                    if (item.Value.Slot > slotNoOfLabelToRemove)
                     {
-                        box.First().labelAndFocalLength.Remove(key.Value);
+                        item.Value.Slot--;
                     }
                 }
             }
             return boxes;
+        }
+
+        private static void AddLabelToNewBox(List<Box> boxes, Match key, int boxNumber, Match getDigits)
+        {
+            int slot = 1;
+            var element = new Element() { Slot = slot, Value = int.Parse(getDigits.Value) };
+            var newBox = new Box();
+            newBox.number = boxNumber;
+            newBox.labelAndFocalLength.Add(key.Value, element);
+
+            boxes.Add(newBox);
         }
 
         private static void Part1(string[] input)
@@ -115,11 +157,12 @@ namespace dayz15
     public class Box
     {
         public int number;
-        public Dictionary<string, int> labelAndFocalLength = new Dictionary<string, int>();
+        public Dictionary<string, Element> labelAndFocalLength = new Dictionary<string, Element>();
     }
 
     public class Element
     {
         public int Slot { get; set; }
         public int Value { get; set; }
+    }
 }
